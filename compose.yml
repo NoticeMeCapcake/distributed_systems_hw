@@ -61,7 +61,7 @@ services:
   platform-api:
     build:
       context: PlatformApi
-      dockerfile: PlatformApi/Dockerfile
+      dockerfile: ./Dockerfile
     container_name: platform-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Production

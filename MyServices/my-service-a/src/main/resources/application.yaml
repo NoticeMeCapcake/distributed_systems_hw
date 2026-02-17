@@ -1,0 +1,22 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: my-service-a
+
+service:
+  b:
+    url: http://service-b:80
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://otel-collector:4318
+  resource:
+    attributes:
+      service.name: delivery-sender
+  traces:
+    exporter: otlp
+  metrics:
+    exporter: otlp

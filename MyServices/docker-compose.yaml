@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  service-a:
+    build:
+      context: ./my-service-a
+      dockerfile: Dockerfile
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
+      - SERVICE_B_URL=http://service-b:80
+    ports:
+      - "8080:80"
+    depends_on:
+      - service-b
+    networks:
+      - platform-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  service-b:
+    build:
+      context: ./my-service-b
+      dockerfile: Dockerfile
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
+    ports:
+      - "8081:80"
+    networks:
+      - platform-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  platform-network:
+    name: platform-net
+    driver: bridge

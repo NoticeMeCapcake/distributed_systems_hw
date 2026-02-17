@@ -1,0 +1,33 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: my-service-b
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,metrics
+  metrics:
+    export:
+      otlp:
+        enabled: true
+        url: http://otel-collector:4318
+        step: 1s
+  tracing:
+    sampling:
+      probability: 1.0
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://otel-collector:4318
+  resource:
+    attributes:
+      service.name: delivery-receiver
+  traces:
+    exporter: otlp
+  metrics:
+    exporter: otlp
