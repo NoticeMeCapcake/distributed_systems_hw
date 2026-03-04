@@ -9,6 +9,7 @@ import io.opentelemetry.api.metrics.LongCounter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class MessengerService {
 
     private static final Logger log = LogManager.getLogger(MessengerService.class);
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final String SIMPLE_ENDPOINT = "/simple";
     private final String IDEMPOTENT_ENDPOINT = "/idempotency";
     private final String ENDPOINT_PREFIX = "/api/message";
@@ -30,6 +31,12 @@ public class MessengerService {
     private String serviceBUrl;
 
     public MessengerService(OpenTelemetry openTelemetry) {
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setConnectionRequestTimeout(1000); // время ожидания из пула соединений
+        factory.setReadTimeout(1000);
+
+        restTemplate = new RestTemplate(factory);
+
         this.sentMessagesCounter = openTelemetry.getMeter("delivery-sender-meter")
                 .counterBuilder("delivery_messages_sent_total")
                 .setDescription("Total sent messages by label message_id")

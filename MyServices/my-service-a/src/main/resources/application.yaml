@@ -20,3 +20,5 @@ otel:
     exporter: otlp
   metrics:
     exporter: otlp
+  logs:
+    exporter: none

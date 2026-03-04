@@ -28,7 +28,7 @@ dependencyManagement {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'io.micrometer:micrometer-registry-otlp'
     implementation 'io.opentelemetry:opentelemetry-api'
     implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
 }
