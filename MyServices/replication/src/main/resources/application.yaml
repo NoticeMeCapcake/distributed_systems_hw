@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: replication
+
+server:
+  port: 8080
+
+replica:
+  n: 3
+  w: 2
+  r: 2
+  delay-max-ms: 1000
+  all-addresses: "" # Будет передано через ENV
+  my-address: ""    # Будет передано через ENV

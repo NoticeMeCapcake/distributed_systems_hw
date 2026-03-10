@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  replica-1:
+    build: ./replication
+    environment:
+      - REPLICA_N=3
+      - REPLICA_W=${W:-2}
+      - REPLICA_R=${R:-2}
+      - REPLICA_DELAY_MAX_MS=500
+      - REPLICA_MY_ADDRESS=http://replica-1:8080
+      - REPLICA_ALL_ADDRESSES=http://replica-1:8080,http://replica-2:8080,http://replica-3:8080
+    networks:
+      - lab-net
+    ports:
+      - "8081:8080"
+
+  replica-2:
+    build: ./replication
+    environment:
+      - REPLICA_N=3
+      - REPLICA_W=${W:-2}
+      - REPLICA_R=${R:-2}
+      - REPLICA_DELAY_MAX_MS=500
+      - REPLICA_MY_ADDRESS=http://replica-2:8080
+      - REPLICA_ALL_ADDRESSES=http://replica-1:8080,http://replica-2:8080,http://replica-3:8080
+    networks:
+      - lab-net
+    ports:
+      - "8082:8080"
+
+  replica-3:
+    build: ./replication
+    environment:
+      - REPLICA_N=3
+      - REPLICA_W=${W:-2}
+      - REPLICA_R=${R:-2}
+      - REPLICA_DELAY_MAX_MS=500
+      - REPLICA_MY_ADDRESS=http://replica-3:8080
+      - REPLICA_ALL_ADDRESSES=http://replica-1:8080,http://replica-2:8080,http://replica-3:8080
+    networks:
+      - lab-net
+    ports:
+      - "8083:8080"
+
+  client:
+    build: ./client-service
+    depends_on:
+      - replica-1
+      - replica-2
+      - replica-3
+    environment:
+      - CLIENT_REPLICA_ADDRESSES=http://replica-1:8080,http://replica-2:8080,http://replica-3:8080
+      - CLIENT_DELAY_BETWEEN_OPS_MS=200
+    networks:
+      - lab-net
+    # Чтобы видеть вывод клиента в консоли docker-compose up
+    tty: true
+    stdin_open: true
+
+networks:
+  lab-net:
+    driver: bridge
