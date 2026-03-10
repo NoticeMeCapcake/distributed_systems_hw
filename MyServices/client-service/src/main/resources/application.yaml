@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: client-service
+
+server:
+  port: 8081 # Клиенту свой порт не особо нужен, но пусть будет
+
+client:
+  replica-addresses: "" # Список адресов реплик
+  delay-between-ops-ms: 100
