@@ -41,17 +41,12 @@ public class ClientRunner implements CommandLineRunner {
 
         log.info("Client started. Monitoring consistency...");
 
-        int counter = 0;
-
         while (true) {
             boolean success = false;
-            int attempts = 0;
-            int maxAttempts = replicas.size(); // Пробуем все реплики не более 1 раза
             var failedWriteTargets = new ArrayList<String>();
             var failedReadTargets = new ArrayList<String>();
 
             while (!success && (failedWriteTargets.size() < replicas.size() || failedReadTargets.size() < replicas.size())) {
-//                attempts++;
                 String target = getReplicaExceptGiven(replicas, failedWriteTargets);
                 String readTarget = getReplicaExceptGiven(replicas, failedReadTargets);
                 boolean isRead = false;
