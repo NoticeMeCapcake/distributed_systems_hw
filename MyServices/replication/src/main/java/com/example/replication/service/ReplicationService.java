@@ -35,7 +35,7 @@ public class ReplicationService {
                         .bodyToMono(DataStore.Record.class)
                         .timeout(Duration.ofMillis(800))
                         .onErrorResume(e -> Mono.just(new DataStore.Record(0, -1))), 10) // Параллелизм
-                .take(w) // Ждём W ответов
+                .take(w, false) // Ждём W ответов
                 .collectList()
                 .map(records -> {
                     // Фильтруем записи с версией -1 (ошибочные)
@@ -52,6 +52,9 @@ public class ReplicationService {
                     return maxVer + 1;
                 })
                 .flatMap(newVer -> {
+                    if (newVer instanceof Boolean) {
+                        return Mono.empty();
+                    }
                     // 2. Рассылка записи
                     return Flux.fromIterable(peers)
                             .flatMap(addr -> webClient.post().uri(addr + "/internal/value")
@@ -61,7 +64,7 @@ public class ReplicationService {
                                     .toBodilessEntity()
                                     .timeout(Duration.ofMillis(800))
                                     .onErrorResume(e -> Mono.empty()), 10)
-                            .take(w)
+                            .take(w, false)
                             .collectList()
                             .map(responses -> responses.size() >= w);
                 });
@@ -78,7 +81,7 @@ public class ReplicationService {
                         .bodyToMono(DataStore.Record.class)
                         .timeout(Duration.ofMillis(800))
                         .onErrorResume(e -> Mono.just(new DataStore.Record(0, -1))), 10)
-                .take(r)
+                .take(r, true)
                 .collectList()
                 .flatMap(records -> {
                     var validRecords = records.stream()

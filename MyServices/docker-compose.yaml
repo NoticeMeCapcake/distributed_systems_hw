@@ -9,7 +9,7 @@ services:
       - REPLICA_R=${R:-2}
       - REPLICA_DELAY_MAX_MS=500
       - REPLICA_MY_ADDRESS=http://replica-1:8080
-      - REPLICA_ALL_ADDRESSES=http://replica-1:8080,http://replica-2:8080,http://replica-3:8080
+      - REPLICA_ALL_ADDRESSES=http://localhost:8080,http://replica-2:8080,http://replica-3:8080
     networks:
       - lab-net
     ports:
@@ -23,7 +23,7 @@ services:
       - REPLICA_R=${R:-2}
       - REPLICA_DELAY_MAX_MS=500
       - REPLICA_MY_ADDRESS=http://replica-2:8080
-      - REPLICA_ALL_ADDRESSES=http://replica-1:8080,http://replica-2:8080,http://replica-3:8080
+      - REPLICA_ALL_ADDRESSES=http://replica-1:8080,http://localhost:8080,http://replica-3:8080
     networks:
       - lab-net
     ports:
@@ -37,7 +37,7 @@ services:
       - REPLICA_R=${R:-2}
       - REPLICA_DELAY_MAX_MS=500
       - REPLICA_MY_ADDRESS=http://replica-3:8080
-      - REPLICA_ALL_ADDRESSES=http://replica-1:8080,http://replica-2:8080,http://replica-3:8080
+      - REPLICA_ALL_ADDRESSES=http://replica-1:8080,http://replica-2:8080,http://localhost:8080
     networks:
       - lab-net
     ports:
